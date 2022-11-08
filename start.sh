@@ -66,7 +66,7 @@ if [ $(id -u) == 0 ] ; then
         # (it could be mounted, and we shouldn't create it if it already exists)
         if [[ ! -e "/home/$NB_USER" ]]; then
             echo "Relocating home dir to /home/$NB_USER"
-            mv /home/darkforest "/home/$NB_USER" || ln -s /home/jovyan "/home/$NB_USER"
+            mv /home/darkforest "/home/$NB_USER" || ln -s /home/darkforest "/home/$NB_USER"
         fi
         # if workdir is in /home/darkforest, cd to /home/$NB_USER
         if [[ "$PWD/" == "/home/darkforest/"* ]]; then
@@ -101,7 +101,7 @@ if [ $(id -u) == 0 ] ; then
     echo "Executing the command: ${cmd[@]}"
     exec sudo -E -H -u $NB_USER PATH=$PATH XDG_CACHE_HOME=/home/$NB_USER/.cache PYTHONPATH=${PYTHONPATH:-} "${cmd[@]}"
 else
-    if [[ "$NB_UID" == "$(id -u darkforest)" && "$NB_GID" == "$(id -g jovyan)" ]]; then
+    if [[ "$NB_UID" == "$(id -u darkforest)" && "$NB_GID" == "$(id -g darkforest)" ]]; then
         # User is not attempting to override user/group via environment
         # variables, but they could still have overridden the uid/gid that
         # container runs as. Check that the user has an entry in the passwd
@@ -111,7 +111,7 @@ else
             if [[ -w /etc/passwd ]]; then
                 echo "Adding passwd file entry for $(id -u)"
                 cat /etc/passwd | sed -e "s/^darkforest:/nayvoj:/" > /tmp/passwd
-                echo "darkforest:x:$(id -u):$(id -g):,,,:/home/jovyan:/bin/bash" >> /tmp/passwd
+                echo "darkforest:x:$(id -u):$(id -g):,,,:/home/darkforest:/bin/bash" >> /tmp/passwd
                 cat /tmp/passwd > /etc/passwd
                 rm /tmp/passwd
             else
